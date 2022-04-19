@@ -6,10 +6,12 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.WindowManager
+import android.widget.LinearLayout
 import android.widget.RemoteViews
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.xaviourg.simpleintentions.databinding.ActivityMainBinding
 import com.xaviourg.simpleintentions.intentiondb.IntentionBlock
 import com.xaviourg.simpleintentions.intentiondb.IntentionViewModel
@@ -36,6 +38,11 @@ class MainActivity : AppCompatActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         window.setStatusBarColor(ContextCompat.getColor(this,R.color.black))
 
+        //Load Settings file and configure application
+            //Configure Card layout (num of intentions (1-5) and scopes displayed)
+            //Configure Appearance
+
+
         //============================= TEST STUFF ========================================
         intentionViewModel.allIntentions.observe(this, {list ->
             list.let {
@@ -45,6 +52,13 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+        //setup main intention block
+        val mainBlockAdapter = BlockAdapter(Scope.DAILY) //automate scope
+        binding.rvMainBlockContent.adapter = mainBlockAdapter
+        binding.rvMainBlockContent.layoutManager = LinearLayoutManager(this)
+        mainBlockAdapter.setListingsCount(5) //automate count
+
+        /*
         binding.btnTestSave.setOnClickListener {
             var todaysIntentions = mutableListOf<String>()
             todaysIntentions.add(binding.etTest1.text.toString())
@@ -58,7 +72,7 @@ class MainActivity : AppCompatActivity() {
             val widget = ComponentName(this, MainWidget::class.java)
             rv.setTextViewText(R.id.appwidget_text, todaysIntentions.joinToString("\n"))
             awm.updateAppWidget(widget, rv)
-        }
+        } */
 
 
 

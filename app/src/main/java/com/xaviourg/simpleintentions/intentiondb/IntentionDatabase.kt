@@ -11,7 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
-@Database(entities = [IntentionBlock::class], views= [DailyIntentionView::class], version = 1, exportSchema = true)
+@Database(entities = [IntentionBlock::class, Settings::class], views= [DailyIntentionView::class], version = 1, exportSchema = true)
 @TypeConverters(Converters::class)
 abstract class IntentionDatabase: RoomDatabase() {
     abstract fun intentionDao(): IntentionDao

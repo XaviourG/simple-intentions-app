@@ -16,9 +16,7 @@ import com.xaviourg.simpleintentions.intentiondb.IntentionBlock
 import com.xaviourg.simpleintentions.intentiondb.IntentionDatabase
 import com.xaviourg.simpleintentions.intentiondb.IntentionRepository
 import com.xaviourg.simpleintentions.intentiondb.IntentionViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.*
 
 /**
  * Implementation of App Widget functionality.
@@ -64,21 +62,26 @@ internal fun updateAppWidget(
     val list = dao.getAllIntentions().asLiveData()
     var observer = Observer<MutableList<IntentionBlock>> {
             l ->
-        println("OBSERVED >>> ${l}")
-        val i = l[0].intentions
-        val text = "${i[0]} \n ${i[1]} \n ${i[2]}"
-        println("Collated Intention as >>> $text")
-        views.setTextViewText(R.id.appwidget_text, text)
-        views.apply {setOnClickPendingIntent(R.id.appwidget_text, pendingIntent)}
-        appWidgetManager.updateAppWidget(appWidgetId, views)
+        if(l.size > 0) {
+            println("OBSERVED >>> ${l}")
+            val i = l[0].intentions
+            val text = "${i[0]} \n ${i[1]} \n ${i[2]}"
+            println("Collated Intention as >>> $text")
+            views.setTextViewText(R.id.appwidget_text, text)
+            views.apply { setOnClickPendingIntent(R.id.appwidget_text, pendingIntent) }
+            appWidgetManager.updateAppWidget(appWidgetId, views)
+        }
     }
     list.observeForever(observer)
+    breakObserver(list, observer)
 
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)
 }
 
-fun setRemoteAdapter(context: Context, views: RemoteViews) {
-    println("TRIGGERING HERE AT POINT 2")
-    views.setRemoteAdapter(R.id.widget_list, Intent(context, WidgetService::class.java))
+fun breakObserver(list: LiveData<MutableList<IntentionBlock>>, observer: Observer<MutableList<IntentionBlock>>) = runBlocking {
+    launch {
+        delay(1000)
+        list.removeObserver(observer)
+    }
 }
