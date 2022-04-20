@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface IntentionDao {
-    @Query("SELECT * FROM IntentionBlock ORDER BY lastEdited DESC")
+    @Query("SELECT * FROM IntentionBlock ORDER BY date DESC")
     fun getAllIntentions(): Flow<MutableList<IntentionBlock>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

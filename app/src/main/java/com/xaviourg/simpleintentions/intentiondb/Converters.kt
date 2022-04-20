@@ -1,6 +1,7 @@
 package com.xaviourg.simpleintentions.intentiondb
 
 import androidx.room.TypeConverter
+import java.time.LocalDate
 
 class Converters {
     @TypeConverter
@@ -20,7 +21,7 @@ class Converters {
     }
     @TypeConverter
     fun fromScope(scope: Scope): Int {
-        return scope.ordinal
+        return scope.value
     }
 
     @TypeConverter
@@ -31,5 +32,15 @@ class Converters {
     @TypeConverter
     fun toString(stringList: List<String>): String {
         return stringList.joinToString(separator = "|||")
+    }
+
+    @TypeConverter
+    fun fromLocalDate(value: LocalDate): String {
+        return value.toString()
+    }
+
+    @TypeConverter
+    fun toLocalDate(value: String): LocalDate {
+        return LocalDate.parse(value)
     }
 }
