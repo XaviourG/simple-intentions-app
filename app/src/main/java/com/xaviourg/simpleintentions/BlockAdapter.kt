@@ -6,11 +6,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.asFlow
 import androidx.recyclerview.widget.RecyclerView
 import com.xaviourg.simpleintentions.databinding.IntentionListingBinding
 import com.xaviourg.simpleintentions.intentiondb.IntentionBlock
 import com.xaviourg.simpleintentions.intentiondb.IntentionViewModel
 import com.xaviourg.simpleintentions.intentiondb.Scope
+import kotlinx.coroutines.flow.toList
 import java.time.DayOfWeek
 import java.time.LocalDate
 
@@ -36,7 +38,7 @@ class BlockAdapter(private val db: IntentionViewModel, private val scope: Scope)
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {
-                intentions[position] = holder.binding.textView.text.toString()
+                intentions[holder.adapterPosition] = holder.binding.textView.text.toString()
             }
 
         })
@@ -49,25 +51,20 @@ class BlockAdapter(private val db: IntentionViewModel, private val scope: Scope)
     fun setListingsCount(count: Int){
         var newList = mutableListOf<String>()
         for (i in 1..count) {
-            newList.add("intention eh...")
+            newList.add("")
         }
         intentions = newList
         notifyDataSetChanged()
     }
 
     fun setIntentions(intentionBlock: IntentionBlock) {
-        println("Updating intentionBlock....")
         IBID = intentionBlock.IBID!!
         date = intentionBlock.date
-        var i = 0
-        while (i < intentionBlock.intentions.size) {
-            if(i < intentions.size) {
-                intentions[i] = intentionBlock.intentions[i]
-            }
-            i++
+        if (intentions.size == intentionBlock.intentions.size) {
+            intentions = intentionBlock.intentions.toMutableList()
         }
+        println("Setting intentions of scope::<${scope}> to $intentions")
         notifyDataSetChanged()
-        println("Update Complete!")
     }
 
     fun save() { //save intention block to database
@@ -80,6 +77,8 @@ class BlockAdapter(private val db: IntentionViewModel, private val scope: Scope)
                 scope = scope,
                 date = date!!
             )
+            //update IBID
+            //somehow reset whol view so it loads back with an IBID
         } else {
             newIntentionBlock = IntentionBlock(
                 IBID = IBID,
@@ -88,7 +87,6 @@ class BlockAdapter(private val db: IntentionViewModel, private val scope: Scope)
                 date = date!!
             )
         }
-        println("                      <<| SAVING INTENTION BLOCK $newIntentionBlock |>>")
         db.insertIntention(newIntentionBlock)
     }
 
@@ -121,7 +119,7 @@ class BlockAdapter(private val db: IntentionViewModel, private val scope: Scope)
     }
 
     fun thisMonthStart(): LocalDate {
-        return LocalDate.now().minusDays((LocalDate.now().dayOfMonth + 1).toLong())
+        return LocalDate.now().minusDays((LocalDate.now().dayOfMonth - 1).toLong())
     }
 
     fun thisQuarterStart(): LocalDate {
@@ -149,7 +147,7 @@ class BlockAdapter(private val db: IntentionViewModel, private val scope: Scope)
     }
 
     fun thisYearStart(): LocalDate {
-        return LocalDate.now().minusDays((LocalDate.now().dayOfYear + 1).toLong())
+        return LocalDate.now().minusDays((LocalDate.now().dayOfYear - 1).toLong())
     }
 
     fun getIntentions(): List<String> {

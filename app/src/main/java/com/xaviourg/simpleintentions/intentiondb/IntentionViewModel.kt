@@ -1,6 +1,7 @@
 package com.xaviourg.simpleintentions.intentiondb
 
 import androidx.lifecycle.*
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 
 class IntentionViewModel(private val intentionRepository: IntentionRepository) : ViewModel() {

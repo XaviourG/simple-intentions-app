@@ -55,16 +55,6 @@ class MainActivity : AppCompatActivity() {
             //Configure Card layout (num of intentions (1-5) and scopes displayed)
             //Configure Appearance
 
-
-        //============================= TEST STUFF ========================================
-        intentionViewModel.allIntentions.observe(this, {list ->
-            list.let {
-                for(entity in it){
-                    println("FOUND ENTITY IN LIST <<$entity>>")
-                }
-            }
-        })
-
         //====================== DB TESTING ===
         intentionViewModel.insertIntention(IntentionBlock(
             IBID = 1,
@@ -82,16 +72,33 @@ class MainActivity : AppCompatActivity() {
             IBID = 3,
             date = LocalDate.parse("2022-04-17"),
             intentions = listOf("Bye", "I", "AM"),
-            scope = Scope.DAILY
+            scope = Scope.YEARLY
         ))
         //=====================================
 
         //setup main intention block
+        binding.tvMainBlockScope.setText("${mainScope.toString()} INTENTIONS")
         mainBlockAdapter = BlockAdapter(intentionViewModel, mainScope)
         binding.rvMainBlockContent.adapter = mainBlockAdapter
         binding.rvMainBlockContent.layoutManager = LinearLayoutManager(this)
         mainBlockAdapter.setListingsCount(intentionCount) //set # of intentions
         setLatestIntention(mainBlockAdapter, mainScope)//populate main intention block
+
+        //setup sub left intention block
+        binding.tvSubLeftBlockScope.setText("${subLeftScope.toString()} INTENTIONS")
+        subLeftBlockAdapter = BlockAdapter(intentionViewModel, subLeftScope)
+        binding.rvSubLeftBlockContent.adapter = subLeftBlockAdapter
+        binding.rvSubLeftBlockContent.layoutManager = LinearLayoutManager(this)
+        subLeftBlockAdapter.setListingsCount(intentionCount) //set # of intentions
+        setLatestIntention(subLeftBlockAdapter, subLeftScope)//populate intention block
+
+        //setup main intention block
+        binding.tvSubRightBlockScope.setText("${subRightScope.toString()} INTENTIONS")
+        subRightBlockAdapter = BlockAdapter(intentionViewModel, subRightScope)
+        binding.rvSubRightBlockContent.adapter = subRightBlockAdapter
+        binding.rvSubRightBlockContent.layoutManager = LinearLayoutManager(this)
+        subRightBlockAdapter.setListingsCount(intentionCount) //set # of intentions
+        setLatestIntention(subRightBlockAdapter, subRightScope)//populate intention block
 
 
         /*
@@ -114,26 +121,36 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         mainBlockAdapter.save()
+        subLeftBlockAdapter.save()
+        subRightBlockAdapter.save()
         val awm = AppWidgetManager.getInstance(this)
         var rv = RemoteViews(this.packageName, R.layout.main_widget)
         val widget = ComponentName(this, MainWidget::class.java)
         rv.setTextViewText(R.id.appwidget_text, mainBlockAdapter.getIntentions().joinToString("\n"))
         awm.updateAppWidget(widget, rv)
+        refresh()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O) //!!!!!!!!!!!!!!!! Needs handling for rest of scopes
+    fun refresh() {
+        finish()
+        startActivity(intent)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun setLatestIntention(adapter: BlockAdapter, scope: Scope) {
+        println("Attempting to set intentions for scope::<$scope>")
         intentionViewModel.allIntentions.observe(this, {
                 list -> list.let {
             //Get list of all intention blocks in scope
             val inScopeList = it.filter { it.scope == scope }
-            println("LIST OF INTENTION BLOCKS IN SCOPE \n >>> $inScopeList")
             if(inScopeList.isEmpty()){
+                println("scope::<$scope> => scope is empty no intentions to load")
                 //There exist no intention blocks do nothing for setup
             } else {
                 //Take most recent block (by database query they should always be sorted by date)
                 val mostRecent = inScopeList.first()
                 //Scope handling to check the date is active
+                println("scope::<$scope> => ${mostRecent.date.month} == ${LocalDate.now().month}")
                 if (
                     ((scope == Scope.DAILY) and (mostRecent.date == LocalDate.now()))
                     or ((scope == Scope.WEEKLY) and (
@@ -160,6 +177,7 @@ class MainActivity : AppCompatActivity() {
                 ) {
                     adapter.setIntentions(mostRecent)
                 } else {
+                    println("scope::<$scope> => scope has intention blocks but not active ones")
                     //Un-active, no need to set anything
                 }
             }
