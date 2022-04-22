@@ -50,11 +50,11 @@ internal fun updateAppWidget(
 ) {
     println("TRIGGERING HERE AT POINT 1")
     //create pending intent for opening app on click
-    val pendingIntent = PendingIntent.getActivity(context, 0,
-        Intent(context, MainActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT)
+    //val pendingIntent = PendingIntent.getActivity(context, 0,
+    //    Intent(context, MainActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT)
 
     // Construct the RemoteViews object
-    val views = RemoteViews(context.packageName, R.layout.main_widget).apply {setOnClickPendingIntent(R.id.appwidget_text, pendingIntent)}
+    val views = RemoteViews(context.packageName, R.layout.main_widget)
 
     //Grab Intentions from DB
     val db = IntentionDatabase.getDatabase(context)
@@ -62,13 +62,12 @@ internal fun updateAppWidget(
     val list = dao.getAllIntentions().asLiveData()
     var observer = Observer<MutableList<IntentionBlock>> {
             l ->
+        println("OBSERVED >>> ${l}")
         if(l.size > 0) {
-            println("OBSERVED >>> ${l}")
             val i = l[0].intentions
             val text = "${i[0]} \n ${i[1]} \n ${i[2]}"
             println("Collated Intention as >>> $text")
             views.setTextViewText(R.id.appwidget_text, text)
-            views.apply { setOnClickPendingIntent(R.id.appwidget_text, pendingIntent) }
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }
     }

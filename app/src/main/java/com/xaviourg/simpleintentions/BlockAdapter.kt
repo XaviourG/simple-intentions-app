@@ -62,8 +62,10 @@ class BlockAdapter(private val db: IntentionViewModel, private val scope: Scope)
         date = intentionBlock.date
         if (intentions.size == intentionBlock.intentions.size) {
             intentions = intentionBlock.intentions.toMutableList()
+            println("Setting intentions of scope::<${scope}> to $intentions")
+        } else {
+            println("Intentions size does not match intentionBlock intentions list !!!")
         }
-        println("Setting intentions of scope::<${scope}> to $intentions")
         notifyDataSetChanged()
     }
 

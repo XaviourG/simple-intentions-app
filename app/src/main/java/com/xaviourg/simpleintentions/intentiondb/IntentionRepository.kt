@@ -10,6 +10,7 @@ class IntentionRepository(private val intentionDao: IntentionDao) {
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
     suspend fun insertIntention(intentionBlock: IntentionBlock){
+        println("INSERTING <<$intentionBlock>> INTO DATABASE")
         intentionDao.insertIntention(intentionBlock)
     }
 

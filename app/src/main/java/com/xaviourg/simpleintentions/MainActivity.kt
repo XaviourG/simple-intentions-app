@@ -56,6 +56,7 @@ class MainActivity : AppCompatActivity() {
             //Configure Appearance
 
         //====================== DB TESTING ===
+        /*
         intentionViewModel.insertIntention(IntentionBlock(
             IBID = 1,
             date = LocalDate.parse("2013-04-07"),
@@ -73,7 +74,7 @@ class MainActivity : AppCompatActivity() {
             date = LocalDate.parse("2022-04-17"),
             intentions = listOf("Bye", "I", "AM"),
             scope = Scope.YEARLY
-        ))
+        )) */
         //=====================================
 
         //setup main intention block
@@ -133,7 +134,6 @@ class MainActivity : AppCompatActivity() {
 
     fun refresh() {
         finish()
-        startActivity(intent)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
