@@ -73,6 +73,30 @@ class MainActivity : AppCompatActivity() {
                     subRightScope = it[0].subRightBlockScope
                     //theme handling add here
                 }
+
+                //setup main intention block
+                binding.tvMainBlockScope.setText("${mainScope.toString()} INTENTIONS")
+                mainBlockAdapter = BlockAdapter(intentionViewModel, mainScope)
+                binding.rvMainBlockContent.adapter = mainBlockAdapter
+                binding.rvMainBlockContent.layoutManager = LinearLayoutManager(this)
+                mainBlockAdapter.setListingsCount(intentionCount) //set # of intentions
+                setLatestIntention(mainBlockAdapter, mainScope)//populate main intention block
+
+                //setup sub left intention block
+                binding.tvSubLeftBlockScope.setText("${subLeftScope.toString()} INTENTIONS")
+                subLeftBlockAdapter = BlockAdapter(intentionViewModel, subLeftScope)
+                binding.rvSubLeftBlockContent.adapter = subLeftBlockAdapter
+                binding.rvSubLeftBlockContent.layoutManager = LinearLayoutManager(this)
+                subLeftBlockAdapter.setListingsCount(intentionCount) //set # of intentions
+                setLatestIntention(subLeftBlockAdapter, subLeftScope)//populate intention block
+
+                //setup main intention block
+                binding.tvSubRightBlockScope.setText("${subRightScope.toString()} INTENTIONS")
+                subRightBlockAdapter = BlockAdapter(intentionViewModel, subRightScope)
+                binding.rvSubRightBlockContent.adapter = subRightBlockAdapter
+                binding.rvSubRightBlockContent.layoutManager = LinearLayoutManager(this)
+                subRightBlockAdapter.setListingsCount(intentionCount) //set # of intentions
+                setLatestIntention(subRightBlockAdapter, subRightScope)//populate intention block
             }
         })
 
@@ -97,30 +121,6 @@ class MainActivity : AppCompatActivity() {
             scope = Scope.YEARLY
         )) */
         //=====================================
-
-        //setup main intention block
-        binding.tvMainBlockScope.setText("${mainScope.toString()} INTENTIONS")
-        mainBlockAdapter = BlockAdapter(intentionViewModel, mainScope)
-        binding.rvMainBlockContent.adapter = mainBlockAdapter
-        binding.rvMainBlockContent.layoutManager = LinearLayoutManager(this)
-        mainBlockAdapter.setListingsCount(intentionCount) //set # of intentions
-        setLatestIntention(mainBlockAdapter, mainScope)//populate main intention block
-
-        //setup sub left intention block
-        binding.tvSubLeftBlockScope.setText("${subLeftScope.toString()} INTENTIONS")
-        subLeftBlockAdapter = BlockAdapter(intentionViewModel, subLeftScope)
-        binding.rvSubLeftBlockContent.adapter = subLeftBlockAdapter
-        binding.rvSubLeftBlockContent.layoutManager = LinearLayoutManager(this)
-        subLeftBlockAdapter.setListingsCount(intentionCount) //set # of intentions
-        setLatestIntention(subLeftBlockAdapter, subLeftScope)//populate intention block
-
-        //setup main intention block
-        binding.tvSubRightBlockScope.setText("${subRightScope.toString()} INTENTIONS")
-        subRightBlockAdapter = BlockAdapter(intentionViewModel, subRightScope)
-        binding.rvSubRightBlockContent.adapter = subRightBlockAdapter
-        binding.rvSubRightBlockContent.layoutManager = LinearLayoutManager(this)
-        subRightBlockAdapter.setListingsCount(intentionCount) //set # of intentions
-        setLatestIntention(subRightBlockAdapter, subRightScope)//populate intention block
 
         //Set settings button intent
         binding.btnSettings.setOnClickListener {

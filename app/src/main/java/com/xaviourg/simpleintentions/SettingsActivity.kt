@@ -35,7 +35,15 @@ class SettingsActivity : AppCompatActivity() {
         //Set intent for back button
         binding.btnBack.setOnClickListener {
             //update settings
-
+            db.insertSettings(
+                Settings(
+                    key = 1,
+                    intentionCount = getIntentionCount(),
+                    mainBlockScope = selectedToScope(binding.mainScopeSpinner.selectedItemPosition),
+                    subLeftBlockScope = selectedToScope(binding.subLeftScopeSpinner.selectedItemPosition),
+                    subRightBlockScope = selectedToScope(binding.subRightScopeSpinner.selectedItemPosition),
+                    theme = "Light"
+            ))
             //open main activity
             val mainIntent = Intent(this, MainActivity::class.java)
             startActivity(mainIntent)
@@ -108,5 +116,34 @@ class SettingsActivity : AppCompatActivity() {
 
             }
         })
+    }
+
+    fun getIntentionCount(): Int {
+        var value = -1
+        when{
+            binding.ic1.isChecked -> value = 1
+            binding.ic2.isChecked -> value = 2
+            binding.ic3.isChecked -> value = 3
+            binding.ic4.isChecked -> value = 4
+            binding.ic5.isChecked -> value = 5
+        }
+        return value
+    }
+
+    fun selectedToScope(value: Int): Scope {
+        var scope = Scope.DAILY
+        when(value) {
+            0 -> scope = Scope.DAILY
+            1 -> scope = Scope.WEEKLY
+            2 -> scope = Scope.FORTNIGHTLY
+            3 -> scope = Scope.MONTHLY
+            4 -> scope = Scope.QUARTERLY
+            5 -> scope = Scope.BIYEARLY
+            6 -> scope = Scope.YEARLY
+            7 -> scope = Scope.BIDECENNIAL
+            8 -> scope = Scope.DECENNIAL
+            9 -> scope = Scope.LIFE
+        }
+        return scope
     }
 }
