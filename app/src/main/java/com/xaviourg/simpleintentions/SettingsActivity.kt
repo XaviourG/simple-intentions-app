@@ -1,5 +1,6 @@
 package com.xaviourg.simpleintentions
 
+import android.app.AlertDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -34,19 +35,32 @@ class SettingsActivity : AppCompatActivity() {
 
         //Set intent for back button
         binding.btnBack.setOnClickListener {
-            //update settings
-            db.insertSettings(
-                Settings(
-                    key = 1,
-                    intentionCount = getIntentionCount(),
-                    mainBlockScope = selectedToScope(binding.mainScopeSpinner.selectedItemPosition),
-                    subLeftBlockScope = selectedToScope(binding.subLeftScopeSpinner.selectedItemPosition),
-                    subRightBlockScope = selectedToScope(binding.subRightScopeSpinner.selectedItemPosition),
-                    theme = "Light"
-            ))
-            //open main activity
-            val mainIntent = Intent(this, MainActivity::class.java)
-            startActivity(mainIntent)
+            //Check for illegal selection combinations...
+            val scope1 = selectedToScope(binding.mainScopeSpinner.selectedItemPosition)
+            val scope2 = selectedToScope(binding.subLeftScopeSpinner.selectedItemPosition)
+            val scope3 = selectedToScope(binding.subRightScopeSpinner.selectedItemPosition)
+            if((scope1 == scope2) or (scope1 == scope3) or (scope2 == scope3)){
+                val alertBuilder = AlertDialog.Builder(this)
+                alertBuilder.setTitle("Cannot Save These Settings")
+                alertBuilder.setMessage("Intention Scopes must be unique!")
+                alertBuilder.show()
+            } else {
+
+                //update settings
+                db.insertSettings(
+                    Settings(
+                        key = 1,
+                        intentionCount = getIntentionCount(),
+                        mainBlockScope = scope1,
+                        subLeftBlockScope = scope2,
+                        subRightBlockScope = scope3,
+                        theme = "Light"
+                    )
+                )
+                //open main activity
+                val mainIntent = Intent(this, MainActivity::class.java)
+                startActivity(mainIntent)
+            }
         }
 
         //Set Scope Spinners
