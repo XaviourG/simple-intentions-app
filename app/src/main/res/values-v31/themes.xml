@@ -9,4 +9,7 @@
         <item name="appWidgetPadding">15dp</item>
         <item name="appWidgetInnerRadius">@android:dimen/system_app_widget_inner_radius</item>
     </style>
+    <style name="Theme.SimpleIntentions.AppWidget.InnerView" parent="@android:style/Theme.DeviceDefault.DayNight">
+        <item name="backgroundColor">@color/sage</item>
+    </style>
 </resources>

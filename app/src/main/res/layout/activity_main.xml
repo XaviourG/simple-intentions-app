@@ -10,9 +10,10 @@
         android:id="@+id/tvLogo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="-10dp"
+        android:fontFamily="@font/water_brush"
         android:text="Simple Intentions"
-        android:textSize="25dp"
+        android:textSize="50dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -23,22 +24,18 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@android:drawable/ic_menu_preferences"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        android:elevation="10dp"/>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cvMainBlock"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvLogo"
-        android:layout_marginTop="30dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:elevation="7dp"
-        android:orientation="vertical">
+        app:layout_constraintTop_toBottomOf="@+id/tvLogo">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -49,101 +46,78 @@
                 android:id="@+id/tvMainBlockScope"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="15dp"
+                android:paddingBottom="2dp"
+                android:background="@drawable/scope_bg"
+                android:fontFamily="@font/main_font"
                 android:text="Main Block Scope"
-                android:textSize="25dp"
                 android:textAlignment="center"
+                android:textColor="?android:colorPrimary"
+                android:textSize="25dp"
+                android:textStyle="italic"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/tvLogo" />
 
             <androidx.recyclerview.widget.RecyclerView
+                app:layout_constraintTop_toBottomOf="@id/tvMainBlockScope"
                 android:id="@+id/rvMainBlockContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cvSubLeftBlock"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toStartOf="@id/cvSubRightBlock"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cvMainBlock"
-        android:layout_marginTop="30dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="8dp"
-        android:elevation="7dp"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tvSubLeftBlockScope"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="15dp"
                 android:text="Scope"
-                android:textSize="25dp"
+                android:paddingBottom="2dp"
+                android:background="@drawable/scope_bg"
+                android:fontFamily="@font/main_font"
                 android:textAlignment="center"
+                android:textColor="?android:colorSecondary"
+                android:textSize="25dp"
+                android:textStyle="italic"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/rvMainBlockContent" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvSubLeftBlockContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/tvSubLeftBlockScope"
                 />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cvSubRightBlock"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/cvSubLeftBlock"
-        app:layout_constraintTop_toBottomOf="@+id/cvMainBlock"
-        android:layout_marginTop="30dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="15dp"
-        android:elevation="7dp"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tvSubRightBlockScope"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="15dp"
                 android:text="Scope"
+                android:paddingBottom="2dp"
+                android:background="@drawable/scope_bg"
+                android:fontFamily="@font/main_font"
+                android:textColor="?android:colorSecondary"
                 android:textSize="25dp"
+                android:textStyle="italic"
                 android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/rvSubLeftBlockContent" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvSubRightBlockContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                />
+                app:layout_constraintTop_toBottomOf="@id/tvSubRightBlockScope"
+                tools:layout_editor_absoluteX="0dp" />
+
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </ScrollView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
