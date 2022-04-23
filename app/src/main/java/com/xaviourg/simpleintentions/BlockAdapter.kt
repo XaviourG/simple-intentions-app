@@ -65,6 +65,18 @@ class BlockAdapter(private val db: IntentionViewModel, private val scope: Scope)
             println("Setting intentions of scope::<${scope}> to $intentions")
         } else {
             println("Intentions size does not match intentionBlock intentions list !!!")
+            var newList = mutableListOf<String>()
+            var i = 0
+            while(i < intentions.size) { //first get a list of size intentions
+                newList.add("")
+                i++
+            }
+            i = 0 //then fill with intentions
+            while((i < intentions.size) and (i < intentionBlock.intentions.size)) {
+                newList[i] = intentionBlock.intentions[i]
+                i++
+            }
+            intentions = newList
         }
         notifyDataSetChanged()
     }
