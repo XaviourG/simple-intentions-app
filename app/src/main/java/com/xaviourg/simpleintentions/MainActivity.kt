@@ -2,6 +2,7 @@ package com.xaviourg.simpleintentions
 
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
+import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -16,6 +17,7 @@ import com.xaviourg.simpleintentions.databinding.ActivityMainBinding
 import com.xaviourg.simpleintentions.intentiondb.IntentionBlock
 import com.xaviourg.simpleintentions.intentiondb.IntentionViewModel
 import com.xaviourg.simpleintentions.intentiondb.Scope
+import com.xaviourg.simpleintentions.intentiondb.Settings
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -28,7 +30,7 @@ class MainActivity : AppCompatActivity() {
     //settings stuff (set to defaults)
     private var weekStartsOn: DayOfWeek = DayOfWeek.MONDAY
     private var intentionCount: Int = 3
-    private var mainScope: Scope = Scope.DECENNIAL
+    private var mainScope: Scope = Scope.DAILY
     private var subLeftScope: Scope = Scope.MONTHLY
     private var subRightScope: Scope = Scope.YEARLY
     //adapters
@@ -52,8 +54,27 @@ class MainActivity : AppCompatActivity() {
         window.setStatusBarColor(ContextCompat.getColor(this,R.color.white))
 
         //Load Settings file and configure application
-            //Configure Card layout (num of intentions (1-5) and scopes displayed)
-            //Configure Appearance
+        intentionViewModel.settings.observe(this, {data ->
+            data.let {
+                println("Got Settings as $it")
+                if(it.size <= 0){
+                    intentionViewModel.insertSettings(Settings(
+                        key = 1,
+                        intentionCount = 3,
+                        mainBlockScope = Scope.DAILY,
+                        subLeftBlockScope = Scope.MONTHLY,
+                        subRightBlockScope = Scope.YEARLY,
+                        theme = "Light"
+                    ))
+                }else{
+                    intentionCount = it[0].intentionCount
+                    mainScope = it[0].mainBlockScope
+                    subLeftScope = it[0].subLeftBlockScope
+                    subRightScope = it[0].subRightBlockScope
+                    //theme handling add here
+                }
+            }
+        })
 
         //====================== DB TESTING ===
         /*
@@ -101,22 +122,11 @@ class MainActivity : AppCompatActivity() {
         subRightBlockAdapter.setListingsCount(intentionCount) //set # of intentions
         setLatestIntention(subRightBlockAdapter, subRightScope)//populate intention block
 
-
-        /*
-        binding.btnTestSave.setOnClickListener {
-            var todaysIntentions = mutableListOf<String>()
-            todaysIntentions.add(binding.etTest1.text.toString())
-            todaysIntentions.add(binding.etTest2.text.toString())
-            todaysIntentions.add(binding.etTest3.text.toString())
-            val new = IntentionBlock(IBID = 1, intentions = todaysIntentions, lastEdited = LocalDateTime.now().toString(), scope = Scope.DAILY)
-            intentionViewModel.insertIntention(new)
-
-            val awm = AppWidgetManager.getInstance(this)
-            var rv = RemoteViews(this.packageName, R.layout.main_widget)
-            val widget = ComponentName(this, MainWidget::class.java)
-            rv.setTextViewText(R.id.appwidget_text, todaysIntentions.joinToString("\n"))
-            awm.updateAppWidget(widget, rv)
-        } */
+        //Set settings button intent
+        binding.btnSettings.setOnClickListener {
+            val settingsIntent = Intent(this, SettingsActivity::class.java)
+            startActivity(settingsIntent)
+        }
     }
 
     override fun onPause() {

@@ -6,6 +6,7 @@ import kotlinx.coroutines.launch
 
 class IntentionViewModel(private val intentionRepository: IntentionRepository) : ViewModel() {
     val allIntentions : LiveData<MutableList<IntentionBlock>> = intentionRepository.allIntentions.asLiveData()
+    val settings : LiveData<MutableList<Settings>> = intentionRepository.settings.asLiveData()
 
 
     // Launching a new coroutine to insert the data in a non-blocking way
@@ -20,6 +21,10 @@ class IntentionViewModel(private val intentionRepository: IntentionRepository) :
 
     fun updateIntention(intentionBlock: IntentionBlock) = viewModelScope.launch {
         intentionRepository.updateIntention(intentionBlock)
+    }
+
+    fun insertSettings(settings: Settings) = viewModelScope.launch {
+        intentionRepository.insertSettings(settings)
     }
 
     //Singleton initialisation of view model

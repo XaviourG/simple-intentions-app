@@ -3,4 +3,23 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="app_widget_description">This is an app widget description</string>
+
+    <string-array name="Scopes">
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Fortnightly</item>
+        <item>Monthly</item>
+        <item>Quarterly</item>
+        <item>6 Monthly</item>
+        <item>Yearly</item>
+        <item>5 Yearly</item>
+        <item>Decennial</item>
+        <item>Lifetime</item>
+    </string-array>
+
+    <string-array name="Themes">
+        <item>Light</item>
+        <item>Dark</item>
+        <item>Grindset</item>
+    </string-array>
 </resources>

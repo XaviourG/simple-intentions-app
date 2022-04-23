@@ -16,4 +16,10 @@ interface IntentionDao {
 
     @Update
     suspend fun updateIntention(intentionBlock: IntentionBlock)
+
+    @Query("SELECT * FROM Settings ORDER BY `key` ASC")
+    fun settings(): Flow<MutableList<Settings>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertSettings(settings: Settings)
 }

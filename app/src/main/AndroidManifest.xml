@@ -11,6 +11,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SimpleIntentions">
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="true" />
+
         <receiver
             android:name=".MainWidget"
             android:exported="true">

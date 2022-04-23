@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 class IntentionRepository(private val intentionDao: IntentionDao) {
 
     val allIntentions: Flow<MutableList<IntentionBlock>> = intentionDao.getAllIntentions()
+    val settings: Flow<MutableList<Settings>> = intentionDao.settings()
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
@@ -24,6 +25,12 @@ class IntentionRepository(private val intentionDao: IntentionDao) {
     @WorkerThread
     suspend fun updateIntention(intentionBlock: IntentionBlock) {
         intentionDao.updateIntention(intentionBlock)
+    }
+
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun insertSettings(settings: Settings) {
+        intentionDao.insertSettings(settings)
     }
 
 }
