@@ -12,11 +12,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.asLiveData
-import com.xaviourg.simpleintentions.intentiondb.IntentionBlock
-import com.xaviourg.simpleintentions.intentiondb.IntentionDatabase
-import com.xaviourg.simpleintentions.intentiondb.IntentionRepository
-import com.xaviourg.simpleintentions.intentiondb.IntentionViewModel
+import com.xaviourg.simpleintentions.intentiondb.*
 import kotlinx.coroutines.*
+import java.time.LocalDate
 
 /**
  * Implementation of App Widget functionality.
@@ -59,23 +57,35 @@ internal fun updateAppWidget(
     //Grab Intentions from DB
     val db = IntentionDatabase.getDatabase(context)
     val dao = db.intentionDao()
+    val settings = dao.settings().asLiveData()
+    var scope = Scope.LIFE
     val list = dao.getAllIntentions().asLiveData()
     var observer = Observer<MutableList<IntentionBlock>> {
             l ->
-        println("OBSERVED >>> ${l}")
         if(l.size > 0) {
-            val i = l[0].intentions
-            val text = "${i[0]} \n ${i[1]} \n ${i[2]}"
-            println("Collated Intention as >>> $text")
-            views.setTextViewText(R.id.appwidget_text, text)
-            appWidgetManager.updateAppWidget(appWidgetId, views)
+            for (ib in l) {
+                //since it orders by descending date, first instance found will be most recent
+                if (activeIntention(ib, scope)){
+                    val text = ib.intentions.joinToString("\n")
+                    views.setTextViewText(R.id.appwidget_text, text)
+                    appWidgetManager.updateAppWidget(appWidgetId, views)
+                    break
+                }
+            }
         }
     }
-    list.observeForever(observer)
-    breakObserver(list, observer)
-
-    // Instruct the widget manager to update the widget
-    appWidgetManager.updateAppWidget(appWidgetId, views)
+    var settingsObserver = Observer<MutableList<Settings>> {
+                s ->
+            println("Main widget observes settings file::$settings")
+            if (s.size <= 0) {} else {
+            scope = s[0].mainBlockScope
+            println("Main Widget got scope::$scope, checking for active intention")
+            list.observeForever(observer)
+            breakObserver(list, observer)
+        }
+    }
+    settings.observeForever(settingsObserver)
+    breakSettingsObserver(settings, settingsObserver)
 }
 
 fun breakObserver(list: LiveData<MutableList<IntentionBlock>>, observer: Observer<MutableList<IntentionBlock>>) = runBlocking {
@@ -83,4 +93,42 @@ fun breakObserver(list: LiveData<MutableList<IntentionBlock>>, observer: Observe
         delay(1000)
         list.removeObserver(observer)
     }
+}
+
+fun breakSettingsObserver(list: LiveData<MutableList<Settings>>, observer: Observer<MutableList<Settings>>) = runBlocking {
+    launch {
+        delay(3000)
+        list.removeObserver(observer)
+    }
+}
+
+fun activeIntention(ib: IntentionBlock, scope: Scope): Boolean {
+    var res = false
+    if(
+            ((scope == Scope.DAILY) and (ib.date == LocalDate.now()))
+                    or ((scope == Scope.WEEKLY) and (
+                    ((LocalDate.now().toEpochDay() - ib.date.toEpochDay()) <= 6)
+                    ))
+                    or ((scope == Scope.FORTNIGHTLY) and (
+                    ((LocalDate.now().toEpochDay() - ib.date.toEpochDay()) <= 13)
+                    ))
+                    or ((scope == Scope.MONTHLY) and (ib.date.month == LocalDate.now().month))
+                    or ((scope == Scope.QUARTERLY) and (
+                    ((LocalDate.now().monthValue - ib.date.monthValue) <= 2)
+                    ))
+                    or ((scope == Scope.BIYEARLY) and (
+                    ((LocalDate.now().monthValue - ib.date.monthValue) <= 5)
+                    ))
+                    or ((scope == Scope.YEARLY) and (ib.date.year == LocalDate.now().year))
+                    or ((scope == Scope.BIDECENNIAL) and (
+                    ((LocalDate.now().year - ib.date.year) <= 4)
+                    ))
+                    or ((scope == Scope.DECENNIAL) and (
+                    ((LocalDate.now().year - ib.date.year) <= 9)
+                    ))
+                    or ((scope == Scope.LIFE))
+            ) {
+        res = true
+    }
+    return res
 }

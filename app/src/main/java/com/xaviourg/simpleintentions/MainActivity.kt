@@ -136,10 +136,10 @@ class MainActivity : AppCompatActivity() {
         subRightBlockAdapter.save()
         val awm = AppWidgetManager.getInstance(this)
         var rv = RemoteViews(this.packageName, R.layout.main_widget)
-        val widget = ComponentName(this, MainWidget::class.java)
+        //Update main widget if it exists
+        val mainWidget = ComponentName(this, MainWidget::class.java)
         rv.setTextViewText(R.id.appwidget_text, mainBlockAdapter.getIntentions().joinToString("\n"))
-        awm.updateAppWidget(widget, rv)
-        refresh()
+        awm.updateAppWidget(mainWidget, rv)
     }
 
     fun refresh() {
