@@ -1,5 +1,6 @@
 package com.xaviourg.simpleintentions
 
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Intent
@@ -57,7 +58,6 @@ class MainActivity : AppCompatActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         //window.setStatusBarColor(ContextCompat.getColor(this,R.color.white))
 
-        //Get theme colours then colour the logo
         /*
         var tmp = TypedValue()
         theme.resolveAttribute(R.attr.colorPrimary, tmp, true)
@@ -80,7 +80,8 @@ class MainActivity : AppCompatActivity() {
             secondaryColourVariant
         ), null, Shader.TileMode.REPEAT)
         binding.tvLogo.paint.setShader(textShader)
-        */
+         */
+
 
         //Load Settings file and configure application
         intentionViewModel.settings.observe(this, {data ->
@@ -158,6 +159,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
     override fun onPause() {
         super.onPause()
         mainBlockAdapter.save()
@@ -170,8 +172,14 @@ class MainActivity : AppCompatActivity() {
         //rv.setTextViewText(R.id.widgetScope, "${mainScope.toString()} INTENTIONS")
         val intentionString = "« ${mainBlockAdapter.getIntentions().joinToString(" »\n« ")} »"
         rv.setTextViewText(R.id.appwidget_text, intentionString)
+        //create pending intent for opening app on click
+        val pendingIntent = PendingIntent.getActivity(this, 0,
+            Intent(this, MainActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT)
+        //assign pending intent
+        rv.setOnClickPendingIntent(R.id.appwidget_text, pendingIntent)
         awm.updateAppWidget(mainWidget, rv)
     }
+
 
     fun refresh() {
         finish()

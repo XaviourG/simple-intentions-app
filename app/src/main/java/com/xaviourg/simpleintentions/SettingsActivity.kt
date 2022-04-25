@@ -2,6 +2,8 @@ package com.xaviourg.simpleintentions
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.LinearGradient
+import android.graphics.Shader
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.TypedValue
@@ -35,6 +37,29 @@ class SettingsActivity : AppCompatActivity() {
         var tmp = TypedValue()
         theme.resolveAttribute(R.attr.colorOnBackground, tmp, true)
         window.setStatusBarColor(tmp.data)
+
+        //Colourful Logo Bullshit
+        tmp = TypedValue()
+        theme.resolveAttribute(R.attr.colorPrimary, tmp, true)
+        val primaryColour = tmp.data
+        tmp = TypedValue()
+        theme.resolveAttribute(R.attr.colorPrimaryVariant, tmp, true)
+        val primaryColourVariant = tmp.data
+        tmp = TypedValue()
+        theme.resolveAttribute(R.attr.colorSecondary, tmp, true)
+        val secondaryColour = tmp.data
+        tmp = TypedValue()
+        theme.resolveAttribute(R.attr.colorSecondaryVariant, tmp, true)
+        val secondaryColourVariant = tmp.data
+        val paint = binding.tvLogo.paint
+        val width = paint.measureText(binding.tvLogo.text.toString())
+        val textShader: Shader = LinearGradient(0f, 0f, width, binding.tvLogo.textSize, intArrayOf(
+            primaryColour,
+            primaryColourVariant,
+            secondaryColour,
+            secondaryColourVariant
+        ), null, Shader.TileMode.REPEAT)
+        binding.tvLogo.paint.setShader(textShader)
 
         //Set intent for back button
         binding.btnBack.setOnClickListener {
