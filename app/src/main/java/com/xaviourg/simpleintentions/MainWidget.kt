@@ -14,6 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.asLiveData
 import com.xaviourg.simpleintentions.intentiondb.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
 import java.time.LocalDate
 
 /**
@@ -57,35 +58,23 @@ internal fun updateAppWidget(
     //Grab Intentions from DB
     val db = IntentionDatabase.getDatabase(context)
     val dao = db.intentionDao()
-    val settings = dao.settings().asLiveData()
     var scope = Scope.LIFE
     val list = dao.getAllIntentions().asLiveData()
-    var observer = Observer<MutableList<IntentionBlock>> {
-            l ->
-        if(l.size > 0) {
-            for (ib in l) {
-                //since it orders by descending date, first instance found will be most recent
-                if (activeIntention(ib, scope)){
-                    val text = ib.intentions.joinToString("\n")
-                    views.setTextViewText(R.id.appwidget_text, text)
-                    appWidgetManager.updateAppWidget(appWidgetId, views)
-                    break
-                }
-            }
+
+
+    GlobalScope.launch {
+        val settings = dao.getSettings()
+        if (settings.isEmpty()){cancel()}
+        val scope = settings[0].mainBlockScope
+        val data = dao.getIntentionsOfScope(scope)
+        if (data.isEmpty()) {cancel()}
+        //because of ordering in query data[0] is most recent)
+        if(activeIntention(data[0], scope)) {
+            val intentionString = "« ${data[0].intentions.joinToString(" »\n« ")} »"
+            views.setTextViewText(R.id.appwidget_text, intentionString)
+            appWidgetManager.updateAppWidget(appWidgetId, views)
         }
     }
-    var settingsObserver = Observer<MutableList<Settings>> {
-                s ->
-            println("Main widget observes settings file::$settings")
-            if (s.size <= 0) {} else {
-            scope = s[0].mainBlockScope
-            println("Main Widget got scope::$scope, checking for active intention")
-            list.observeForever(observer)
-            breakObserver(list, observer)
-        }
-    }
-    settings.observeForever(settingsObserver)
-    breakSettingsObserver(settings, settingsObserver)
 }
 
 fun breakObserver(list: LiveData<MutableList<IntentionBlock>>, observer: Observer<MutableList<IntentionBlock>>) = runBlocking {
@@ -97,7 +86,8 @@ fun breakObserver(list: LiveData<MutableList<IntentionBlock>>, observer: Observe
 
 fun breakSettingsObserver(list: LiveData<MutableList<Settings>>, observer: Observer<MutableList<Settings>>) = runBlocking {
     launch {
-        delay(3000)
+        delay(10000)
+        println("BREAKING SETTINGS OBSERVER")
         list.removeObserver(observer)
     }
 }

@@ -167,7 +167,9 @@ class MainActivity : AppCompatActivity() {
         var rv = RemoteViews(this.packageName, R.layout.main_widget)
         //Update main widget if it exists
         val mainWidget = ComponentName(this, MainWidget::class.java)
-        rv.setTextViewText(R.id.appwidget_text, mainBlockAdapter.getIntentions().joinToString("\n"))
+        //rv.setTextViewText(R.id.widgetScope, "${mainScope.toString()} INTENTIONS")
+        val intentionString = "« ${mainBlockAdapter.getIntentions().joinToString(" »\n« ")} »"
+        rv.setTextViewText(R.id.appwidget_text, intentionString)
         awm.updateAppWidget(mainWidget, rv)
     }
 

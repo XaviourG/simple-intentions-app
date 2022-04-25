@@ -8,6 +8,9 @@
         <item name="appWidgetRadius">@android:dimen/system_app_widget_background_radius</item>
         <item name="appWidgetPadding">15dp</item>
         <item name="appWidgetInnerRadius">@android:dimen/system_app_widget_inner_radius</item>
+        <item name="android:id">@android:id/background</item>
+        <item name="android:background">?android:attr/colorBackground</item>
+        <item name="colorPrimary">@color/sage</item>
     </style>
     <style name="Theme.SimpleIntentions.AppWidget.InnerView" parent="@android:style/Theme.DeviceDefault.DayNight">
         <item name="backgroundColor">@color/sage</item>
