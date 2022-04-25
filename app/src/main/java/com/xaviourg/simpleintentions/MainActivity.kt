@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity() {
         //Load Settings file and configure application
         intentionViewModel.settings.observe(this, {data ->
             data.let {
-                println("Got Settings as $it")
+                //println("Got Settings as $it")
                 if(it.size <= 0){
                     intentionViewModel.insertSettings(Settings(
                         key = 1,
@@ -179,19 +179,19 @@ class MainActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setLatestIntention(adapter: BlockAdapter, scope: Scope) {
-        println("Attempting to set intentions for scope::<$scope>")
+        //println("Attempting to set intentions for scope::<$scope>")
         intentionViewModel.allIntentions.observe(this, {
                 list -> list.let {
             //Get list of all intention blocks in scope
             val inScopeList = it.filter { it.scope == scope }
             if(inScopeList.isEmpty()){
-                println("scope::<$scope> => scope is empty no intentions to load")
+                //println("scope::<$scope> => scope is empty no intentions to load")
                 //There exist no intention blocks do nothing for setup
             } else {
                 //Take most recent block (by database query they should always be sorted by date)
                 val mostRecent = inScopeList.first()
                 //Scope handling to check the date is active
-                println("scope::<$scope> => ${mostRecent.date.month} == ${LocalDate.now().month}")
+                //println("scope::<$scope> => ${mostRecent.date.month} == ${LocalDate.now().month}")
                 if (
                     ((scope == Scope.DAILY) and (mostRecent.date == LocalDate.now()))
                     or ((scope == Scope.WEEKLY) and (
@@ -218,7 +218,7 @@ class MainActivity : AppCompatActivity() {
                 ) {
                     adapter.setIntentions(mostRecent)
                 } else {
-                    println("scope::<$scope> => scope has intention blocks but not active ones")
+                    //println("scope::<$scope> => scope has intention blocks but not active ones")
                     //Un-active, no need to set anything
                 }
             }

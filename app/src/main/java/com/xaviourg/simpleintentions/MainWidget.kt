@@ -47,10 +47,6 @@ internal fun updateAppWidget(
     appWidgetManager: AppWidgetManager,
     appWidgetId: Int
 ) {
-    println("TRIGGERING HERE AT POINT 1")
-    //create pending intent for opening app on click
-    //val pendingIntent = PendingIntent.getActivity(context, 0,
-    //    Intent(context, MainActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT)
 
     // Construct the RemoteViews object
     val views = RemoteViews(context.packageName, R.layout.main_widget)
@@ -58,10 +54,7 @@ internal fun updateAppWidget(
     //Grab Intentions from DB
     val db = IntentionDatabase.getDatabase(context)
     val dao = db.intentionDao()
-    var scope = Scope.LIFE
-    val list = dao.getAllIntentions().asLiveData()
-
-
+    //Query DB in coroutine
     GlobalScope.launch {
         val settings = dao.getSettings()
         if (settings.isEmpty()){cancel()}
@@ -72,9 +65,15 @@ internal fun updateAppWidget(
         if(activeIntention(data[0], scope)) {
             val intentionString = "« ${data[0].intentions.joinToString(" »\n« ")} »"
             views.setTextViewText(R.id.appwidget_text, intentionString)
+            //create pending intent for opening app on click
+            val pendingIntent = PendingIntent.getActivity(context, 0,
+                Intent(context, MainActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT)
+            //assign pending intent
+            views.setOnClickPendingIntent(R.id.appwidget_text, pendingIntent)
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }
     }
+
 }
 
 fun breakObserver(list: LiveData<MutableList<IntentionBlock>>, observer: Observer<MutableList<IntentionBlock>>) = runBlocking {
@@ -87,7 +86,7 @@ fun breakObserver(list: LiveData<MutableList<IntentionBlock>>, observer: Observe
 fun breakSettingsObserver(list: LiveData<MutableList<Settings>>, observer: Observer<MutableList<Settings>>) = runBlocking {
     launch {
         delay(10000)
-        println("BREAKING SETTINGS OBSERVER")
+        //println("BREAKING SETTINGS OBSERVER")
         list.removeObserver(observer)
     }
 }
