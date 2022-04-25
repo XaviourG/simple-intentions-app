@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.WindowManager
 import android.widget.ArrayAdapter
 import androidx.activity.viewModels
@@ -31,7 +32,9 @@ class SettingsActivity : AppCompatActivity() {
         getSupportActionBar()!!.hide()
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        window.setStatusBarColor(ContextCompat.getColor(this,R.color.white))
+        var tmp = TypedValue()
+        theme.resolveAttribute(R.attr.colorOnBackground, tmp, true)
+        window.setStatusBarColor(tmp.data)
 
         //Set intent for back button
         binding.btnBack.setOnClickListener {
@@ -75,7 +78,7 @@ class SettingsActivity : AppCompatActivity() {
         //Set Theme Spinner
         val themes = resources.getStringArray(R.array.Themes)
         val adapterScopeSpinner = ArrayAdapter(this, android.R.layout.simple_spinner_item, themes)
-        binding.themeSpinner.adapter = adapterScopeSpinner
+        //binding.themeSpinner.adapter = adapterScopeSpinner
 
         //Load in existing settings & prepopulate options
         db.settings.observe(this, {data ->

@@ -8,23 +8,30 @@
 
     <android.widget.Button
         android:id="@+id/btnBack"
-        android:layout_width="80dp"
+        android:layout_width="100dp"
         android:layout_height="50dp"
-        android:text="BACK"
+        android:background="@drawable/back_btn"
+        android:fontFamily="@font/main_font"
+        android:gravity="center"
+        android:text="SAVE"
+        android:textColor="@color/white"
         android:textSize="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textStyle="bold"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/tvIntentionCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
         android:text="Intention Count:"
         android:textSize="25dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="100dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnBack" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <RadioGroup
         android:id="@+id/rgIntentionCount"
@@ -80,18 +87,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvIntentionScopes"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="75dp"
-        android:layout_marginRight="75dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
         android:elevation="7dp"
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:background="@drawable/card_shadow">
             <Spinner
                 android:id="@+id/mainScopeSpinner"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -102,54 +110,57 @@
         android:id="@+id/cvSubLeftBlock"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toStartOf="@id/cvSubRightBlock"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cvMainBlock"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="75dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
         android:elevation="7dp"
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:background="@drawable/card_shadow">
             <Spinner
                 android:id="@+id/subLeftScopeSpinner"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-
 
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cvSubRightBlock"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/cvSubLeftBlock"
-        app:layout_constraintTop_toBottomOf="@+id/cvMainBlock"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="75dp"
         android:elevation="7dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cvSubLeftBlock">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:gravity="center"
             android:orientation="vertical"
-            android:gravity="center">
+            android:background="@drawable/card_shadow">
+
             <Spinner
                 android:id="@+id/subRightScopeSpinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
 
-
+    <!--
     <TextView
         android:id="@+id/tvTheme"
         android:layout_width="wrap_content"
@@ -170,6 +181,7 @@
         app:layout_constraintBottom_toBottomOf="@id/tvTheme"
         android:layout_marginStart="15dp"
         android:layout_marginBottom="5dp"/>
+        -->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

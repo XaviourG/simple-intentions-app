@@ -58,6 +58,7 @@ class MainActivity : AppCompatActivity() {
         //window.setStatusBarColor(ContextCompat.getColor(this,R.color.white))
 
         //Get theme colours then colour the logo
+        /*
         var tmp = TypedValue()
         theme.resolveAttribute(R.attr.colorPrimary, tmp, true)
         val primaryColour = tmp.data
@@ -79,6 +80,7 @@ class MainActivity : AppCompatActivity() {
             secondaryColourVariant
         ), null, Shader.TileMode.REPEAT)
         binding.tvLogo.paint.setShader(textShader)
+        */
 
         //Load Settings file and configure application
         intentionViewModel.settings.observe(this, {data ->
@@ -102,7 +104,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 //setup main intention block
-                binding.tvMainBlockScope.setText("${formatScope(mainScope.toString())} Intention")
+                binding.tvMainBlockScope.setText("${mainScope.toString()} INTENTION")
                 mainBlockAdapter = BlockAdapter(intentionViewModel, mainScope)
                 binding.rvMainBlockContent.adapter = mainBlockAdapter
                 binding.rvMainBlockContent.layoutManager = LinearLayoutManager(this)
@@ -110,7 +112,7 @@ class MainActivity : AppCompatActivity() {
                 setLatestIntention(mainBlockAdapter, mainScope)//populate main intention block
 
                 //setup sub left intention block
-                binding.tvSubLeftBlockScope.setText("${formatScope(subLeftScope.toString())} Intention")
+                binding.tvSubLeftBlockScope.setText("${subLeftScope.toString()} INTENTION")
                 subLeftBlockAdapter = BlockAdapter(intentionViewModel, subLeftScope)
                 binding.rvSubLeftBlockContent.adapter = subLeftBlockAdapter
                 binding.rvSubLeftBlockContent.layoutManager = LinearLayoutManager(this)
@@ -118,7 +120,7 @@ class MainActivity : AppCompatActivity() {
                 setLatestIntention(subLeftBlockAdapter, subLeftScope)//populate intention block
 
                 //setup main intention block
-                binding.tvSubRightBlockScope.setText("${formatScope(subRightScope.toString())} Intention")
+                binding.tvSubRightBlockScope.setText("${subRightScope.toString()} INTENTION")
                 subRightBlockAdapter = BlockAdapter(intentionViewModel, subRightScope)
                 binding.rvSubRightBlockContent.adapter = subRightBlockAdapter
                 binding.rvSubRightBlockContent.layoutManager = LinearLayoutManager(this)
