@@ -1,0 +1,7 @@
+
+- Privacy Policy -
+
+The Simple Intentions application collects user entered intention strings in order to display them to said user.
+It also holds a settins fiel witht he users specified experience settings.
+This data is all stored locally in a room database on the users device and is at no point transfered to or seen by the developer.
+The app has no data transferance capabilities.
